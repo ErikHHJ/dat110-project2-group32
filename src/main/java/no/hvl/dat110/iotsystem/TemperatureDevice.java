@@ -1,30 +1,37 @@
 package no.hvl.dat110.iotsystem;
 
 import no.hvl.dat110.client.Client;
-import no.hvl.dat110.common.TODO;
 
 public class TemperatureDevice {
 
-	private static final int COUNT = 10;
+    private static final int COUNT = 10;
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		// simulated / virtual temperature sensor
-		TemperatureSensor sn = new TemperatureSensor();
+        TemperatureSensor sn = new TemperatureSensor();
 
-		// TODO - start
+        Client client = new Client("temperaturesensor", Common.BROKERHOST, Common.BROKERPORT);
 
-		// create a client object and use it to
+        System.out.println("temperature device started");
 
-		// - connect to the broker - user "sensor" as the user name
-		// - publish the temperature(s)
-		// - disconnect from the broker
+        client.connect();
 
-		// TODO - end
+        for (int i = 0; i < COUNT; i++) {
 
-		System.out.println("Temperature device stopping ... ");
+            int temp = sn.read();
 
-		throw new UnsupportedOperationException(TODO.method());
+            System.out.println("READING: " + temp);
 
-	}
+            client.publish(Common.TEMPTOPIC, Integer.toString(temp));
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
+
+        client.disconnect();
+
+        System.out.println("Temperature device stopping ... ");
+    }
 }

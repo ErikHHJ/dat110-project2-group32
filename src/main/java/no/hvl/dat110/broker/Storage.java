@@ -52,50 +52,59 @@ public class Storage {
 
 	public void addClientSession(String user, Connection connection) {
 
-		// TODO: add corresponding client session to the storage
-		// See ClientSession class
-		
-		throw new UnsupportedOperationException(TODO.method());
-		
+	    ClientSession session = new ClientSession(user, connection);
+	    clients.put(user, session);
+
+	    Logger.log("Client sessions:" + clients.size());
 	}
 
 	public void removeClientSession(String user) {
 
-		// TODO: disconnet the client (user) 
-		// and remove client session for user from the storage
-		
-		throw new UnsupportedOperationException(TODO.method());
-		
+	    ClientSession session = clients.get(user);
+
+	    if (session != null) {
+	        session.disconnect();
+	        clients.remove(user);
+	    }
+
+	    Logger.log("Client sessions:" + clients.size());
 	}
 
 	public void createTopic(String topic) {
 
-		// TODO: create topic in the storage
+	    if (!subscriptions.containsKey(topic)) {
+	        subscriptions.put(topic, ConcurrentHashMap.newKeySet());
+	    }
 
-		throw new UnsupportedOperationException(TODO.method());
-	
+	    Logger.log("Topic : " + subscriptions.size());
 	}
 
 	public void deleteTopic(String topic) {
 
-		// TODO: delete topic from the storage
+	    subscriptions.remove(topic);
 
-		throw new UnsupportedOperationException(TODO.method());
-		
+	    Logger.log("Topic : " + subscriptions.size());
 	}
 
 	public void addSubscriber(String user, String topic) {
 
-		// TODO: add the user as subscriber to the topic
-		
-		throw new UnsupportedOperationException(TODO.method());
-		
+	    Set<String> subs = subscriptions.get(topic);
+
+	    if (subs != null) {
+	        subs.add(user);
+	    }
+
+	    Logger.log("Subscribers : " + topic + " : " + subs.size());
 	}
 
 	public void removeSubscriber(String user, String topic) {
 
-		// TODO: remove the user as subscriber to the topic
+	    Set<String> subs = subscriptions.get(topic);
 
-		throw new UnsupportedOperationException(TODO.method());
+	    if (subs != null) {
+	        subs.remove(user);
+	    }
+
+	    Logger.log("Subscribers : " + topic + " : " + subs.size());
 	}
 }
